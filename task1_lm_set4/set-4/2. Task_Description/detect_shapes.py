@@ -1,4 +1,3 @@
-import imutils
 import cv2
 def find_shape(c):
 	# initialize the shape name and approximate the contour
@@ -104,9 +103,9 @@ for j in range(0,len(heirarchy_c[0])):
 l_board=Sort(l_board)
 board_objects=[]
 for i in range(0,len(l_board)):
-    board_objects.append([i+1,l_board[i][3],l_container[i][4]])
-#print board_objects
-print l_board
+    board_objects.append([i+1,l_board[i][3],l_board[i][4]])
+print board_objects
+#print l_board
 container_objects=[]
 for i in range(0,len(l_container)):
     container_objects.append([i+1,l_container[i][3],l_container[i][4]])
