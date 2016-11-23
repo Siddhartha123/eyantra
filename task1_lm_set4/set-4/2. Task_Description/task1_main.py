@@ -70,8 +70,7 @@ Return:
 
 	##### WRITE YOUR CODE HERE - STARTS
         def find_shape(c):
-	# initialize the shape name and approximate the contour
-                shape = "unidentified"
+	
                 peri = cv2.arcLength(c, True)
                 approx = cv2.approxPolyDP(c, 0.04 * peri, True)
                 if len(approx) == 3:
@@ -92,7 +91,7 @@ Return:
                 elif px[0]<10 and px[1]>240 and px[2]>240:
                         return "yellow"
         def Sort(l):
-            from operator import itemgetter, attrgetter
+            from operator import itemgetter
             import math
             l.sort()
             j=0
@@ -133,17 +132,17 @@ Return:
                     shape = find_shape(cnts_b[heirarchy_b[0][j][2]])
                     c = cnts_b[heirarchy_b[0][j][2]]
                     M = cv2.moments(c)
-                    cX = int((M["m10"] / M["m00"]))
-                    cY = int((M["m01"] / M["m00"]))
-                    area=M["m00"]
+                    cX = int((M['m10'] / M['m00']))
+                    cY = int((M['m01'] / M['m00']))
+                    area=M['m00']
                     px=image_board[cY,cX]
-                    cv2.drawContours(image_board, cnts_b,heirarchy_b[0][j][2], (206, 255, 39), 2)
+                    #cv2.drawContours(image_board, cnts_b,heirarchy_b[0][j][2], (206, 255, 39), 2)
                 else:
                     shape=None
                     area=0
                     px=[260,260,260]
                 l_board.append([cY1,cX1,heirarchy_b[0][j][2],detect_color(px),shape,area,cX1*cY1])       
-                cv2.putText(image_board, detect_color(px), (cX, cY), cv2.FONT_ITALIC,0.5, (255, 255, 255), 2)
+                
 
         cnts_c = cv2.findContours(image_contain_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
         cnts_c = cnts_c[0]
@@ -160,17 +159,16 @@ Return:
                     shape = find_shape(cnts_c[heirarchy_c[0][j][2]])
                     c = cnts_c[heirarchy_c[0][j][2]]
                     M = cv2.moments(c)
-                    cX = int((M["m10"] / M["m00"]))
-                    cY = int((M["m01"] / M["m00"]))
-                    area=M["m00"]
+                    cX = int((M['m10'] / M['m00']))
+                    cY = int((M['m01'] / M['m00']))
+                    area=M['m00']
                     px=image_contain[cY,cX]
-                    cv2.drawContours(image_contain, cnts_c,heirarchy_c[0][j][2], (206, 255, 39), 2)
                 else:
                     shape=None
                     area=0
                     px=[260,260,260]
                 l_container.append([cY1,cX1,heirarchy_c[0][j][2],detect_color(px),shape,area,cX1*cY1])       
-                cv2.putText(image_contain, detect_color(px), (cX, cY), cv2.FONT_ITALIC,0.5, (255, 255, 255), 2)
+                
         l_board=Sort(l_board)
         board_objects=[]
         for i in range(0,len(l_board)):
@@ -183,17 +181,15 @@ Return:
         #print container_objects
         #print l_container
         l_container=Sort(l_container)
-        for i in l_board:
+        for i in range(0,len(l_board)):
             flag=0
-            for j in l_container:
-                    
-                if i[3]==j[3] and i[4]==j[4] and abs(i[5]-j[5])<=10:
-                     output_list.append((l_board.index(i)+1,l_container.index(j)+1))
-                     
+            for j in range(0,len(l_container)):       
+                if l_board[i][3]==l_container[j][3] and l_board[i][4]==l_container[j][4] and abs(l_board[i][5]-l_container[j][5])<=10:
+                     output_list.append((i+1,j+1))
                      flag=1
                      break
             if flag==0:
-                output_list.append((l_board.index(i)+1,0))
+                output_list.append((i+1,0))
 	# cv2.imshow("board_filepath - press Esc to close",cv2.imread(board_filepath))			- For check - remove
 	# cv2.imshow("container_filepath - press Esc to close",cv2.imread(container_filepath))
 
