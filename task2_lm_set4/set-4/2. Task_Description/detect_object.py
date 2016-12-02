@@ -5,22 +5,6 @@ import numpy as np
 
 
 def main(board_filepath):
-	'''
-This function is the main program which takes image of game-board and
-container as argument. Team is expected to insert their part of code as
-required to solve the given task (function calls etc).
-
-***DO NOT EDIT THE FUNCTION NAME. Leave it as main****
-Function name: main()
-
-******DO NOT EDIT name of these argument*******
-Input argument: board_filepath and container_filepath.
-
-Return:
-1 - List of tuples which is the expected final output. See Task1_Description for detail.
-2 - List of tuples for objects on board. See Task1_Description for detail.
-	'''
-
         board_objects = []		# List to store output of board -- DO NOT CHANGE VARIABLE NAME
 	output_list = []		# List to store final output 	-- DO NOT CHANGE VARIABLE NAME
 
@@ -92,7 +76,7 @@ Return:
                     area=M['m00']
                     px=image_board[cY,cX]
                     cv2.drawContours(image_board, cnts_b,heirarchy_b[0][j][2], (206, 255, 39), 2)
-                    l_board.append([cY,cX,detect_color(px),shape,area])
+                    l_board.append([cX,cY,detect_color(px),shape,area])
                 else:
                     shape=None
                     area=0
