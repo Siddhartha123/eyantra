@@ -5,10 +5,9 @@ def main(board_filepath):
     board_objects = []		# List to store output of board -- DO NOT CHANGE VARIABLE NAME
     output_list = []		# List to store final output 	-- DO NOT CHANGE VARIABLE NAME
 
-    def sort1(l=[]):
+    def sort_grid(l=[]):
         import math as m
         k=sorted(l)
-        d=dict()
         h=0
         li=[]
         for i in k:
@@ -16,15 +15,10 @@ def main(board_filepath):
 
         for i in range(int(m.sqrt(len(l)))):
             for j in range(int(m.sqrt(len(l)))):
-                d[li[h]]=[i+1,j+1,li[h][2],li[h][3]]
-                #k[h][0]=i+1#new
-                #k[h][1]=j+1#new
+                k[h][0]=i+1
+                k[h][1]=j+1
                 h+=1
-        s=[]
-        for i in range(len(l)):
-            s.append(d[li[i]])
-        return(s)
-        #return(k)#new
+        return(k)
 
     def find_shape(c):
 
@@ -60,7 +54,6 @@ def main(board_filepath):
     cv2.drawContours(image_board, cnts_b,-1, (206, 255, 39), 1)
     cnts_b1 = cnts_b1[0]
     shape=None
-    #print heirarchy_b[0]
     l_board=[]
     for j in range(0,len(heirarchy_b[0])):
         if heirarchy_b[0][j][3]==-1:
@@ -71,17 +64,17 @@ def main(board_filepath):
             if heirarchy_b[0][j][2]!=-1:
                 #cv2.putText(image_board,str(j), (cX, cY), cv2.FONT_ITALIC,0.5, (0,0,0), 2)
                 shape=find_shape(cnts_b[heirarchy_b[0][j][2]])
+            else:
+                shape=None
             l_board.append([cX,cY,heirarchy_b[0][j][2],shape])
-    print l_board
-    l_board=sort1(l_board)
+    l_board=sort_grid(l_board)
     print(l_board)
     output_object=[]
     for j in range(0,len(l_board)):
         if l_board[j][2]!=-1:
             output_object.append((l_board[j][0],l_board[j][1]))
-    print output_object
-    cv2.imshow("contour",image_board)
-    #print l_board
+    print output_object #this is the output of task 1 - coordinates of occupied grid
+    #cv2.imshow("contour",image_board)
 if __name__ == '__main__':
     board_filepath = "test_images/test_image1.jpg"
     main(board_filepath)
