@@ -16,12 +16,15 @@ def main(board_filepath):
 
         for i in range(int(m.sqrt(len(l)))):
             for j in range(int(m.sqrt(len(l)))):
-                d[li[h]]=[i+1,j+1,li[h][2]]
+                d[li[h]]=[i+1,j+1,li[h][2],li[h][3]]
+                #k[h][0]=i+1#new
+                #k[h][1]=j+1#new
                 h+=1
         s=[]
         for i in range(len(l)):
             s.append(d[li[i]])
         return(s)
+        #return(k)#new
 
     def find_shape(c):
 
@@ -55,8 +58,8 @@ def main(board_filepath):
     cnts_b = cnts_b[0]
     cnts_b1,heirarchy_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(image_board, cnts_b,-1, (206, 255, 39), 1)
-
     cnts_b1 = cnts_b1[0]
+    shape=None
     #print heirarchy_b[0]
     l_board=[]
     for j in range(0,len(heirarchy_b[0])):
@@ -66,9 +69,12 @@ def main(board_filepath):
             cX = int((M['m10'] / M['m00']))
             cY = int((M['m01'] / M['m00']))
             if heirarchy_b[0][j][2]!=-1:
-                cv2.putText(image_board,str(j), (cX, cY), cv2.FONT_ITALIC,0.5, (0,0,0), 2)
-            l_board.append([cX,cY,heirarchy_b[0][j][2]])
+                #cv2.putText(image_board,str(j), (cX, cY), cv2.FONT_ITALIC,0.5, (0,0,0), 2)
+                shape=find_shape(cnts_b[heirarchy_b[0][j][2]])
+            l_board.append([cX,cY,heirarchy_b[0][j][2],shape])
+    print l_board
     l_board=sort1(l_board)
+    print(l_board)
     output_object=[]
     for j in range(0,len(l_board)):
         if l_board[j][2]!=-1:
@@ -77,7 +83,6 @@ def main(board_filepath):
     cv2.imshow("contour",image_board)
     #print l_board
 if __name__ == '__main__':
-    board_filepath = "test_images/test_image4.jpg"
+    board_filepath = "test_images/test_image1.jpg"
     main(board_filepath)
-
 cv2.waitKey(0)
