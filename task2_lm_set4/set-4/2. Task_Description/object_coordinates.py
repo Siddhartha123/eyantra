@@ -77,7 +77,7 @@ def main(board_filepath):
     cv2.imshow("contour",image_board)
     #print l_board
 if __name__ == '__main__':
-    board_filepath = "test_images/test_image3.jpg"
+    board_filepath = "test_images/test_image4.jpg"
     main(board_filepath)
 
 cv2.waitKey(0)
