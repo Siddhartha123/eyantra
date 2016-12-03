@@ -33,7 +33,6 @@ def main(board_filepath):
         return shape
 
     def detect_color(px):
-            print px
             if px[0]>240 and px[1]<10 and px[2]<10:
                     return "blue"
             elif px[0]<10 and px[1]<10 and px[2]>240:
@@ -54,12 +53,6 @@ def main(board_filepath):
     cnts_b1,heirarchy_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(image_board, cnts_b,-1, (206, 255, 39), 1)
     cnts_b1 = cnts_b1[0]
-    print ""
-    print ""
-    print cnts_b
-    print cnts_b1
-    print ""
-    print ""
     shape=None
     l_board=[]
     for j in range(0,len(heirarchy_b[0])):
@@ -80,10 +73,30 @@ def main(board_filepath):
                 shape=None
                 color=None
             l_board.append([cX,cY,heirarchy_b[0][j][2],shape,color])
-    print l_board
-    print ""
-    l_board=sort_grid(l_board)
-    print(l_board)
+
+    l_board_sorted=sort_grid(l_board)
+    #print(l_board_sorted)
+
+    path_board=[]
+    for start_object in l_board_sorted:
+        if(start_object[2]!=-1):
+            for object in l_board_sorted:
+                    if object[2]==-1:
+                        path_board.append([object[0],object[1],"0"])
+                    elif l_board_sorted.index(start_object)!=l_board_sorted.index(object) and object[3]==start_object[3] and object[4]==start_object[4]:
+                        path_board.append([object[0],object[1],"*"])
+                    else:
+                        path_board.append([object[0],object[1],"1"])
+            print ""
+            print path_board
+            print ""
+            path_board=[]
+
+    #print l_board
+    #print ""
+
+
+
     output_object=[]
     for j in range(0,len(l_board)):
         if l_board[j][2]!=-1:
