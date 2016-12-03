@@ -33,6 +33,7 @@ def main(board_filepath):
         return shape
 
     def detect_color(px):
+            print px
             if px[0]>240 and px[1]<10 and px[2]<10:
                     return "blue"
             elif px[0]<10 and px[1]<10 and px[2]>240:
@@ -44,15 +45,21 @@ def main(board_filepath):
 
     image_board = cv2.imread(board_filepath)
     image_board_gray=cv2.cvtColor(image_board,cv2.COLOR_BGR2GRAY)
-    cv2.imshow("gray",image_board_gray)
+    #cv2.imshow("gray",image_board_gray)
     image_board_inrange=cv2.inRange(image_board_gray,200,255)
-    cv2.imshow("board",image_board_inrange)
+    #cv2.imshow("board",image_board_inrange)
 
     cnts_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
     cnts_b = cnts_b[0]
     cnts_b1,heirarchy_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(image_board, cnts_b,-1, (206, 255, 39), 1)
     cnts_b1 = cnts_b1[0]
+    print ""
+    print ""
+    print cnts_b
+    print cnts_b1
+    print ""
+    print ""
     shape=None
     l_board=[]
     for j in range(0,len(heirarchy_b[0])):
@@ -64,9 +71,17 @@ def main(board_filepath):
             if heirarchy_b[0][j][2]!=-1:
                 #cv2.putText(image_board,str(j), (cX, cY), cv2.FONT_ITALIC,0.5, (0,0,0), 2)
                 shape=find_shape(cnts_b[heirarchy_b[0][j][2]])
+                M1=cv2.moments(cnts_b[heirarchy_b[0][j][2]])
+                cX_object = int((M1['m10'] / M1['m00']))
+                cY_object = int((M1['m01'] / M1['m00']))
+                px=image_board[cY_object,cX_object]
+                color=detect_color(px)
             else:
                 shape=None
-            l_board.append([cX,cY,heirarchy_b[0][j][2],shape])
+                color=None
+            l_board.append([cX,cY,heirarchy_b[0][j][2],shape,color])
+    print l_board
+    print ""
     l_board=sort_grid(l_board)
     print(l_board)
     output_object=[]
@@ -74,7 +89,7 @@ def main(board_filepath):
         if l_board[j][2]!=-1:
             output_object.append((l_board[j][0],l_board[j][1]))
     print output_object #this is the output of task 1 - coordinates of occupied grid
-    #cv2.imshow("contour",image_board)
+    cv2.imshow("contour",image_board)
 if __name__ == '__main__':
     board_filepath = "test_images/test_image1.jpg"
     main(board_filepath)
