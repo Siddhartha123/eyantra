@@ -94,15 +94,10 @@ def main(board_filepath):
             print ""
             path_board=[]
 
-    #print l_board
-    #print ""
-
-
-
     output_object=[]
-    for j in range(0,len(l_board)):
-        if l_board[j][2]!=-1:
-            output_object.append((l_board[j][0],l_board[j][1]))
+    for j in range(0,len(l_board_sorted)):
+        if l_board_sorted[j][2]!=-1:
+            output_object.append((l_board_sorted[j][0],l_board_sorted[j][1]))
     print output_object #this is the output of task 1 - coordinates of occupied grid
     cv2.imshow("contour",image_board)
 if __name__ == '__main__':
