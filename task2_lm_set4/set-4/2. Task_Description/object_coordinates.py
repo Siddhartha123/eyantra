@@ -85,6 +85,8 @@ def main(board_filepath):
                         path_board.append([object[0],object[1],"0"])
                     elif l_board_sorted.index(start_object)!=l_board_sorted.index(object) and object[3]==start_object[3] and object[4]==start_object[4]:
                         path_board.append([object[0],object[1],"*"])
+                    elif l_board_sorted.index(start_object)==l_board_sorted.index(object):
+                        path_board.append([object[0],object[1],"#"])
                     else:
                         path_board.append([object[0],object[1],"1"])
             print ""
