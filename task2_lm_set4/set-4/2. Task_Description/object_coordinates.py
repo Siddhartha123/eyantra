@@ -77,22 +77,23 @@ def main(board_filepath):
     l_board_sorted=sort_grid(l_board)
     #print(l_board_sorted)
 
-    path_board=[]
+    path_board={}
     for start_object in l_board_sorted:
         if(start_object[2]!=-1):
             for object in l_board_sorted:
                     if object[2]==-1:
-                        path_board.append([object[0],object[1],"0"])
+                        path_board[tuple([object[0],object[1]])]=["0"]
                     elif l_board_sorted.index(start_object)!=l_board_sorted.index(object) and object[3]==start_object[3] and object[4]==start_object[4]:
-                        path_board.append([object[0],object[1],"*"])
+                        path_board[tuple([object[0],object[1]])]=["*"]
                     elif l_board_sorted.index(start_object)==l_board_sorted.index(object):
-                        path_board.append([object[0],object[1],"#"])
+                        path_board[tuple([object[0],object[1]])]=["#"]
                     else:
-                        path_board.append([object[0],object[1],"1"])
+                        path_board[tuple([object[0],object[1]])]=["1"]
+                    
             print ""
             print path_board
             print ""
-            path_board=[]
+            path_board={}
 
     output_object=[]
     for j in range(0,len(l_board_sorted)):
