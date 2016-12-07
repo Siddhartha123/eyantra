@@ -11,11 +11,11 @@ parent={}
 g={}
 f={}
 def lookup(x,y):
-        if (x <= 0) or (y <= 0) or (x > (10)) or (y > (10)) or p[(x,y)][0] == '1':
+        if (x <= 0) or (y <= 0) or (x > (10)) or (y > (10)) or p[(x,y)][0] == '1':#checks if neighbour out of board or a obstacle
             return 0
         else:
             return [x,y]
-def link(t):
+def link(t):#adds neighbours of everything except obstacles
         
         x=t[0]
         y=t[1]
@@ -85,7 +85,7 @@ def path(current_node):
 
         
 
-while ((len(opened) > 0) and (opened!={(10,10)})):
+while ((len(opened) > 0) and (opened!={(10,1)} and opened!={(10,10)})):
             
             
             fsort = sorted(f, key=lambda t:fscore(t))
@@ -97,8 +97,8 @@ while ((len(opened) > 0) and (opened!={(10,10)})):
             current = fsort[i]
 
             if current == stop:
-                s=path(stop)
-                print(path(stop))
+                
+                s=(path(stop))
                    
 
             try:
@@ -124,9 +124,9 @@ while ((len(opened) > 0) and (opened!={(10,10)})):
             
                         if neighbour not in opened:
                             opened.add(neighbour)
-            #print(len(opened),opened)
+            print(len(opened),opened)
 
-
+print(s)
                 
                 
                 
