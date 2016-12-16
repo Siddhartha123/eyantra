@@ -1,105 +1,38 @@
-# -*- coding: utf-8 -*-
-'''
-**************************************************************************
-*                  IMAGE PROCESSING (e-Yantra 2016)
-*                  ================================
-*  This software is intended to teach image processing concepts
-*  
-*  Author: e-Yantra Project, Department of Computer Science
-*  and Engineering, Indian Institute of Technology Bombay.
-*  
-*  Software released under Creative Commons CC BY-NC-SA
-*
-*  For legal information refer to:
-*        http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode 
-*     
-*
-*  This software is made available on an “AS IS WHERE IS BASIS”. 
-*  Licensee/end user indemnifies and will keep e-Yantra indemnified from
-*  any and all claim(s) that emanate from the use of the Software or 
-*  breach of the terms of this agreement.
-*  
-*  e-Yantra - An MHRD project under National Mission on Education using 
-*  ICT(NMEICT)
-*
-* ---------------------------------------------------
-*  Theme: Launch a Module
-*  Filename: task2_main.py
-*  Version: 1.0.0  
-*  Date: November 28, 2016
-*  How to run this file: python task2_main.py
-*  Author: e-Yantra Project, Department of Computer Science and Engineering, Indian Institute of Technology Bombay.
-* ---------------------------------------------------
-
-* ====================== GENERAL Instruction =======================
-* 1. Check for "DO NOT EDIT" tags - make sure you do not change function name of main().
-* 2. Return should be a list named occupied_grids and a dictionary named planned_path.
-* 3. Do not keep uncessary print statement, imshow() functions in final submission that you submit
-* 4. Do not change the file name
-* 5. Your Program will be tested through code test suite designed and graded based on number of test cases passed 
-**************************************************************************
-'''
 import cv2
 import numpy as np
-
-# ******* WRITE YOUR FUNCTION, VARIABLES etc HERE
 import math as m
+def main(board_filepath):
+    board_objects = []		# List to store output of board -- DO NOT CHANGE VARIABLE NAME
+    output_list = []		# List to store final output 	-- DO NOT CHANGE VARIABLE NAME
 
-def main(image_filename):
-	'''
-This function is the main program which takes image of test_images as argument. 
-Team is expected to insert their part of code as required to solve the given 
-task (function calls etc).
-
-***DO NOT EDIT THE FUNCTION NAME. Leave it as main****
-Function name: main()
-
-******DO NOT EDIT name of these argument*******
-Input argument: image_filename
-
-Return:
-1 - List of tuples which is the coordinates for occupied grid. See Task2_Description for detail. 
-2 - Dictionary with information of path. See Task2_Description for detail.
-	'''
-
-	occupied_grids = []		# List to store coordinates of occupied grid -- DO NOT CHANGE VARIABLE NAME
-	planned_path = {}		# Dictionary to store information regarding path planning  	-- DO NOT CHANGE VARIABLE NAME
-	
-
-
-
-	##### WRITE YOUR CODE HERE - STARTS
-        board_objects = []		# List to store output of board -- DO NOT CHANGE VARIABLE NAME
-        output_list = []		# List to store final output 	-- DO NOT CHANGE VARIABLE NAME
-
-        def sort_grid(l=[]):
+    def sort_grid(l=[]):
         
-                k=sorted(l)
-                h=0
-                li=[]
-                for i in k:
-                    li.append(tuple(i))
+        k=sorted(l)
+        h=0
+        li=[]
+        for i in k:
+            li.append(tuple(i))
 
-                for i in range(int(m.sqrt(len(l)))):
-                    for j in range(int(m.sqrt(len(l)))):
-                        k[h][0]=i+1
-                        k[h][1]=j+1
-                        h+=1
-                return(k)
+        for i in range(int(m.sqrt(len(l)))):
+            for j in range(int(m.sqrt(len(l)))):
+                k[h][0]=i+1
+                k[h][1]=j+1
+                h+=1
+        return(k)
 
-        def find_shape(c):
+    def find_shape(c):
 
-                peri = cv2.arcLength(c, True)
-                approx = cv2.approxPolyDP(c, 0.04 * peri, True)
-                if len(approx) == 3:
-                    shape = "Triangle"
-                elif len(approx) == 4:
-                    shape = "4-sided"
-                else:
-                    shape = "Circle"
-                return shape
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+        if len(approx) == 3:
+            shape = "Triangle"
+        elif len(approx) == 4:
+            shape = "4-sided"
+        else:
+            shape = "Circle"
+        return shape
 
-        def detect_color(px):
+    def detect_color(px):
             if px[0]>240 and px[1]<10 and px[2]<10:
                     return "blue"
             elif px[0]<10 and px[1]<10 and px[2]>240:
@@ -146,7 +79,7 @@ Return:
 
     l_board_sorted=sort_grid(l_board)
     #print("^^",l_board_sorted)
-    
+    u=dict()
     path_board={}
     
     def stopExists(start):
@@ -156,7 +89,7 @@ Return:
                 break
         else:
             return(False)
-        
+        return(stop)
     for start_object in l_board_sorted:
         if(start_object[2]!=-1 and start_object[4]!="black" and stopExists(start_object) ):
             for object in l_board_sorted:
@@ -269,9 +202,6 @@ Return:
                                 s=path(w)
                                 #print(path(w))
                                 end=w
-                                s.remove(start)
-                                s.remove(end)
-                                
 
                         try:
                             opened.remove(current)
@@ -299,38 +229,50 @@ Return:
                                         opened.add(neighbour)
                         #print(len(opened),opened)
 
-            planned_path[(start)]=[end,s,len(s)+1]
+            u[(start,end)]=s
             path_board={}
 #####################################################################################################################################################################
     
     
-    
+    output_object=[]
     for j in range(0,len(l_board_sorted)):
         if l_board_sorted[j][2]!=-1:
-            occupied_grids.append((l_board_sorted[j][0],l_board_sorted[j][1]))
+            output_object.append((l_board_sorted[j][0],l_board_sorted[j][1]))
+    #print len(output_object)
+    print "%",output_object #this is the output of task 1 - coordinates of occupied grid
+    #cv2.imshow("contour",image_board)
+    #for k in u:
+    #    print "$",k,"   ",u[k]
+    print ""
+    v=sorted(u)
+    print v
+    print ""
+    for i in v:
+        print i,"--->",u[i]
+        
+        
+    import turtle as t
+    r=60
+    b=5.5*r
+   
     
-	# cv2.imshow("board_filepath - press Esc to close",cv2.imread(board_filepath))			- For check - remove
-	# cv2.imshow("container_filepath - press Esc to close",cv2.imread(container_filepath))
-
-
-	# #### NO EDIT AFTER THIS
-
-# DO NOT EDIT
-# return Expected output, which is a list of tuples. See Task1_Description for detail.
-	return occupied_grids, planned_path
-
-
-
-'''
-Below part of program will run when ever this file (task1_main.py) is run directly from terminal/Idle prompt.
-
-'''
-if __name__ == '__main__':
-
-    # change filename to check for other images
-    image_filename = "test_images/test_image1.jpg"
-
-    main(image_filename)
-
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    
+    t.bgpic("test_image"+str(fyl)+".gif")
+    t.ht()   
+    t.pensize(10)
+    t.penup()
+    for p in u:
+        t.penup()
+        t.clear()
+        for i in u[p]:
+            t.color("violet","violet")
+            t.setpos(i[0]*r-b,(11-i[1])*r-b)
+            t.pendown()
+    t.exitonclick()
+for fyl in range(1,5):
+#fyl=1
+    if __name__ == '__main__':
+        board_filepath = "test_images/test_image"+str(fyl)+".jpg"
+        main(board_filepath)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
