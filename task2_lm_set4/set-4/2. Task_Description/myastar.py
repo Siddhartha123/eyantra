@@ -4,6 +4,8 @@ for i in p:
     for j in range(4):
         p[i].append([0,0])
 
+
+
         
 closed=set()
 opened=set()
@@ -16,7 +18,7 @@ def lookup(x,y):
         else:
             return [x,y]
 def link(t):#adds neighbours of everything except obstacles
-        
+
         x=t[0]
         y=t[1]
         if p[t][0] == '1':
@@ -65,29 +67,29 @@ def neighbours(t):
             neighbour.add(tuple(p[t][3]))
         if p[t][4] != 0:
             neighbour.add(tuple(p[t][4]))
-        
+
         return neighbour
 def path(current_node):
-    try: 
-        
+    try:
+
         parent[current_node]
         p = path(parent[current_node])
         return_path = []
         return_path.extend(p)
         return_path.append(current_node)
-        
+
         return return_path
-        
+
         print("reached here")
     except KeyError:
         # we have reached the start node
         return [current_node]
 
-        
+
 
 while ((len(opened) > 0) and (opened!={(10,1)} and opened!={(10,10)})):
-            
-            
+
+
             fsort = sorted(f, key=lambda t:fscore(t))
             i = 0
             for i in range(len(fsort)-1):
@@ -97,9 +99,9 @@ while ((len(opened) > 0) and (opened!={(10,1)} and opened!={(10,10)})):
             current = fsort[i]
 
             if current == stop:
-                
+
                 s=(path(stop))
-                   
+
 
             try:
                 opened.remove(current)
@@ -112,23 +114,18 @@ while ((len(opened) > 0) and (opened!={(10,1)} and opened!={(10,10)})):
 
             for neighbour in neighbours(current):
                 if neighbour not in closed:
-          
+
                     temp_g = g[current] + 1
-                    if (neighbour not in opened) or (temp_g < g[neighbour]): 
+                    if (neighbour not in opened) or (temp_g < g[neighbour]):
                         # if the neighbour node has not yet been evaluated yet, then we evaluate it
-                        # or, if we have just found a shorter way to reach neighbour from the start node, 
+                        # or, if we have just found a shorter way to reach neighbour from the start node,
                         # then we replace the previous route to get to neighbour, with this new quicker route
                         parent[neighbour] = current
                         g[neighbour] = temp_g
                         f[neighbour] = fscore(neighbour)
-            
+
                         if neighbour not in opened:
                             opened.add(neighbour)
             print(len(opened),opened)
 
 print(s)
-                
-                
-                
-                
-                
