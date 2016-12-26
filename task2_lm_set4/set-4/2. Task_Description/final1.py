@@ -225,12 +225,12 @@ def main(board_filepath):
     for j in range(0,len(l_board_sorted)):
         if l_board_sorted[j][2]!=-1:
             occupied_grids.append((l_board_sorted[j][0],l_board_sorted[j][1]))
-    print occupied_grids
-    print""
-    #print planned_path
-    v=sorted(planned_path)
-    for i in v:
-        print i,"  -----> ",planned_path[i]
+    #print occupied_grids
+    #print""
+    print planned_path
+    #v=sorted(planned_path)
+    #for i in v:
+    #    print i,"  -----> ",planned_path[i]
     #cv2.imshow("contour",image_grid)
 fyl=4
 if __name__ == '__main__':

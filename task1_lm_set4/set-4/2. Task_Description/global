@@ -1,0 +1,8 @@
+
+def i():
+    
+    print x
+
+def s():
+    i()
+x=3

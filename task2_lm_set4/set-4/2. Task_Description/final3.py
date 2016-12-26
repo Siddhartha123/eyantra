@@ -2,11 +2,9 @@ import cv2
 import numpy as np
 import math as m
 def main(board_filepath):
-    board_objects = []		# List to store output of board -- DO NOT CHANGE VARIABLE NAME
-    output_list = []		# List to store final output 	-- DO NOT CHANGE VARIABLE NAME
 
     def sort_grid(l=[]):#
-
+        
         k=sorted(l)
         h=0
         li=[]
@@ -32,16 +30,16 @@ def main(board_filepath):
             shape = "Circle"
         return shape
 
-    def detect_color(px):
-            if px[0]>240 and px[1]<10 and px[2]<10:
+    def detect_color(pixel):
+            if pixel[0]>240 and pixel[1]<10 and pixel[2]<10:
                     return "blue"
-            elif px[0]<10 and px[1]<10 and px[2]>240:
+            elif pixel[0]<10 and pixel[1]<10 and pixel[2]>240:
                     return "red"
-            elif px[0]<10 and px[1]>240 and px[2]<10:
+            elif pixel[0]<10 and pixel[1]>240 and pixel[2]<10:
                     return "green"
-            elif px[0]<10 and px[1]>240 and px[2]>240:
+            elif pixel[0]<10 and pixel[1]>240 and pixel[2]>240:
                     return "yellow"
-            elif px[0]<10 and px[1]<10 and px[2]<10:
+            elif pixel[0]<10 and pixel[1]<10 and pixel[2]<10:
                     return "black"
     image_board = cv2.imread(board_filepath)
     image_board_gray=cv2.cvtColor(image_board,cv2.COLOR_BGR2GRAY)
@@ -67,8 +65,8 @@ def main(board_filepath):
                 M1=cv2.moments(cnts_b[heirarchy_b[0][j][2]])
                 cX_object = int((M1['m10'] / M1['m00']))
                 cY_object = int((M1['m01'] / M1['m00']))
-                px=image_board[cY_object,cX_object]
-                color=detect_color(px)
+                central_pixel=image_board[cY_object,cX_object]
+                color=detect_color(central_pixel)
                 area=int(M1['m00'])
             else:
                 shape=None
@@ -77,45 +75,45 @@ def main(board_filepath):
             l_board.append([cX,cY,heirarchy_b[0][j][2],shape,color,area])
 
     l_board_sorted=sort_grid(l_board)
-
-
+    
+    
     path_board={}
     planned_path={}
-
+    
     def stop_exists(start):
-        for j in l_board_sorted:
-            if(tuple([start[0],start[1]])!=tuple([j[0],j[1]]) and j[3]==start[3] and j[4]==start[4] and abs(j[5]-start[5])<=10):
+        for element in l_board_sorted:
+            if(tuple([start[0],start[1]])!=tuple([element[0],element[1]]) and element[3]==start[3] and element[4]==start[4] and abs(element[5]-start[5])<=10):
                 return(True)
                 break
         else:
             return(False)
-    def tag_neighbour(x,y):
-        if (x <= 0) or (y <= 0) or (x > (10)) or (y > (10)) or path_board[(x,y)][0] == '1':
-            return 0
+    def check_for_valid_neighbour(x_coordinate,y_coordinate):
+        if (x_coordinate <= 0) or (y_coordinate <= 0) or (x_coordinate > (10)) or (y_coordinate > (10)) or path_board[(x_coordinate,y_coordinate)]['type'] == 'obsatacle':
+            return 'non-existent'
         else:
-            return [x,y]
+            return [x_coordinate,y_coordinate]    
     def neighbours(t):
         neighbour = set()
-        if path_board[t][1] != 0:
-            neighbour.add(tuple(path_board[t][1]))
-        if path_board[t][2] != 0:
-            neighbour.add(tuple(path_board[t][2]))
-        if path_board[t][3] != 0:
-            neighbour.add(tuple(path_board[t][3]))
-        if path_board[t][4] != 0:
-            neighbour.add(tuple(path_board[t][4]))
-
+        if path_board[t]['north neighbour'] != 'non-existent':
+            neighbour.add(tuple(path_board[t]['north neighbour']))
+        if path_board[t]['west neighbour'] != 'non-existent':
+            neighbour.add(tuple(path_board[t]['west neighbour']))
+        if path_board[t]['south neighbour'] != 'non-existent':
+            neighbour.add(tuple(path_board[t]['south neighbour']))
+        if path_board[t]['east neighbour'] != 'non-existent':
+            neighbour.add(tuple(path_board[t]['east neighbour']))
+        
         return neighbour
     def path(current,before):
-        try:
+        try: 
             p = path(before[current],before)
             return_path = []
             return_path.extend(p)
             return_path.append(current)
-
+            
             return return_path
-
-
+            
+            
         except KeyError:
             # we have reached the start node
             return [current]
@@ -124,50 +122,53 @@ def main(board_filepath):
         if(not stop_exists(start_object)):
             planned_path[tuple([start_object[0],start_object[1]])]=["NO MATCH",[],0]
         elif(start_object[2]!=-1 and start_object[4]!="black" and stop_exists(start_object) ):
+            
             for object in l_board_sorted:
+                    path_board[tuple([object[0],object[1]])]=dict()
                     if object[2]==-1:
-                        path_board[tuple([object[0],object[1]])]=["0"]
+                        path_board[tuple([object[0],object[1]])]["type"]=["accessible"]
                     elif l_board_sorted.index(start_object)!=l_board_sorted.index(object) and object[3]==start_object[3] and object[4]==start_object[4] and abs(object[5]-start_object[5])<=10:
-                        path_board[tuple([object[0],object[1]])]=["stop"]
+                        path_board[tuple([object[0],object[1]])]["type"]=["duplicate"]
                     else:
-                        path_board[tuple([object[0],object[1]])]=["1"]
-
+                        path_board[tuple([object[0],object[1]])]["type"]=["obstacle"]
+                    
             for i in path_board:
-                for j in range(4):
-                    path_board[i].append([0,0])
+                for direction in ["north","west","south","east"]:
+                    path_board[i][direction+" neighbour"]=[0,0]
+            #path_board[(element_x_coordinate,element_y_coordinate]=[state,north,west,south,east]
             closed=set()
             opened=set()
             parent={}
-            g={}
+            g_score={}
             gtemp={}
 
             start=tuple([start_object[0],start_object[1]])
-            path_board[start][0]='0'
+            path_board[start]["type"]='accessible'
 
             stop=set()
             for j in path_board:
-                if(path_board[j][0]=="stop"):
+                if(path_board[j]["type"]=="duplicate"):
                     stop.add(j)
-
+                
             for t in path_board:
-                    x=t[0]
-                    y=t[1]
-                    if path_board[t][0] == '1':
+                    x_coordinate=t[0]
+                    y_coordinate=t[1]
+                    if path_board[t]["type"] == 'obstacle':
                         continue
 
-                    path_board[t][1] = tag_neighbour(x,y-1)#north
-                    path_board[t][2] = tag_neighbour(x-1,y)#west
-                    path_board[t][3] = tag_neighbour(x,y+1)#south
-                    path_board[t][4] = tag_neighbour(x+1,y)#east
+                    path_board[t]['north neighbour'] = check_for_valid_neighbour(x_coordinate,y_coordinate-1)
+                    path_board[t]['west neighbour'] = check_for_valid_neighbour(x_coordinate-1,y_coordinate)
+                    path_board[t]['south neighbour'] = check_for_valid_neighbour(x_coordinate,y_coordinate+1)
+                    path_board[t]['east neighbourt'] = check_for_valid_neighbour(x_coordinate+1,y_coordinate)
 
-            g[start] = 0
-            gtemp[start] =g[start]
+            g_score[start] = 0
+            gtemp[start] =g_score[start] 
             opened.add(start)
             path_exists=None
             while ((len(opened) > 0) and stop.isdisjoint(closed)):
-
-
-                        gsort = sorted(gtemp, key=lambda t:g[t])
+                        
+                        
+                        gsort = sorted(gtemp, key=lambda t:g_score[t])
                         i = 0
                         for i in range(len(gsort)-1):
                             if(gsort[i] not in closed):
@@ -175,16 +176,16 @@ def main(board_filepath):
 
                         current = gsort[i]
 
-
+                     
                         if current in stop:
                             shortest_path=path(current,parent)
                             path_exists=True
                             end=current
                             shortest_path.remove(start)
                             shortest_path.remove(end)
+                            
 
-
-
+                        
                         opened.discard(current)
                         gtemp.pop(current)
                         closed.add(current)
@@ -193,28 +194,28 @@ def main(board_filepath):
 
                         for neighbour in neighbours(current):
                             if neighbour not in closed:
-
-                                temp_g = g[current] + 1
-                                if (neighbour not in opened) or (temp_g < g[neighbour]):
+                      
+                                temp_g = g_score[current] + 1
+                                if (neighbour not in opened) or (temp_g < g_score[neighbour]): 
                                     # if the neighbour node has not yet been evaluated yet, then we evaluate it
-                                    # or, if we have just found a shorter way to reach neighbour from the start node,
+                                    # or, if we have just found a shorter way to reach neighbour from the start node, 
                                     # then we replace the previous route to get to neighbour, with this new quicker route
                                     parent[neighbour]=current
-                                    g[neighbour]=temp_g
+                                    g_score[neighbour]=temp_g
                                     gtemp[neighbour]=temp_g
-
+                        
                                     if neighbour not in opened:
                                         opened.add(neighbour)
-
+                        
             if(path_exists):
                 planned_path[start]=[end,shortest_path,len(shortest_path)+1]
             else:
                 planned_path[start]=["NO PATH",[],0]
-
+            
             path_board={}
 #####################################################################################################################################################################
-
-
+    
+    
     occupied_grids=[]
     for j in l_board_sorted:
         if j[2]!=-1:
