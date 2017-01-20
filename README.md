@@ -1,2 +1,0 @@
-# eyantra
-python codes
