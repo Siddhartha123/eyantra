@@ -72,10 +72,10 @@ def get_perspective_image(frame):
     #you may need to edit below code to your own need
     #for LM
     pts1 = np.float32([[x2,y2],[x4,y4],[x1,y1],[x3,y3]])
-    pts2 = np.float32([[0,500],[700,500],[0,0],[700,0]])#remarking each four side of the cropped image
+    pts2 = np.float32([[0,750],[1050,750],[0,0],[1050,0]])#remarking each four side of the cropped image
     persM = cv2.getPerspectiveTransform(pts1,pts2)
-    dst = cv2.warpPerspective(frame,persM,(700,500))#setting output image resolution
-    pts=np.array([[[0,0],[700,0],[700,500],[0,500]]])
+    dst = cv2.warpPerspective(frame,persM,(1050,750))#setting output image resolution
+    pts=np.array([[[0,0],[1050,0],[1050,750],[0,750]]])
     print pts
     cv2.polylines(dst, pts, True, (0,0,0), 25)
     cv2.imshow("123",dst)
