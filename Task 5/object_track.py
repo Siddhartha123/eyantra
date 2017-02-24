@@ -48,21 +48,5 @@ for k in range(0,len(hierarchy[0])):
 		shape = find_shape(contours[k])
 		cv2.putText(source, shape, (int(cX), int(cY)), cv2.FONT_ITALIC,0.5, (0,0,0), 2) 
 cv2.imshow('final',source)
-
-source=img2
-ret,thresh2=cv2.threshold(output_2,70,255,cv2.THRESH_BINARY)
-cv2.imshow('thresh2',thresh2)
-im2, contours, hierarchy = cv2.findContours(thresh2.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-for k in range(0,len(hierarchy[0])):
-	c = contours[k]
-	M = cv2.moments(c)
-	area=M['m00']
-	if area>50 and area<500:
-		cX = int((M['m10'] / M['m00']))
-		cY = int((M['m01'] / M['m00']))
-		cv2.drawContours(source,contours,k, (200,0,255),2)
-		shape = find_shape(contours[k])
-		cv2.putText(source, shape, (int(cX), int(cY)), cv2.FONT_ITALIC,0.5, (0,0,0), 2) 		
-cv2.imshow('final2',source)
 cv2.waitKey(0)
 
