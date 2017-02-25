@@ -31,7 +31,6 @@ image_gray=g
 #image_bw=cv2.threshold(image_gray,255,128,cv2.THRESH_BINARY)
 retval,image_bw=cv2.threshold(image_gray, 100,255, cv2.THRESH_BINARY)
 cv2.imshow("threshold",image_bw)
-cv2.imwrite("test.jpg",image_bw)
 '''
 image_bw = cv2.erode(image_bw.copy(),kernel,iterations = 1)
 image_bw = cv2.dilate(image_bw.copy(),kernel,iterations = 1)
@@ -39,17 +38,19 @@ cv2.imshow("erode",image_bw)
 '''
 cnts_b= cv2.findContours(image_bw.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
 cnts_b=cnts_b[0]
+count =0
 for j in range(0,len(cnts_b)):
     c1 = cnts_b[j]
     M=cv2.moments(c1)
     shape=find_shape(c1)
 
-    if M['m00'] >10:
+    if M['m00'] >100:
         cX = int((M['m10'] / M['m00']))
         cY = int((M['m01'] / M['m00']))
-        cv2.drawContours(resize_image, cnts_b,j, (0, 255,255), 1)
-        cv2.putText(resize_image, shape, (cX, cY), cv2.FONT_ITALIC,0.5, (255, 255, 255), 2)
-
-cv2.imshow("contour",resize_image)
+        cv2.drawContours(source, cnts_b,j, (0, 255,255), 2)
+        cv2.putText(source, shape, (cX, cY), cv2.FONT_ITALIC,0.5, (20, 20, 20), 1)
+        count=count+1
+print count
+cv2.imshow("contour",source)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
