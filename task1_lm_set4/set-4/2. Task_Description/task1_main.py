@@ -113,13 +113,13 @@ Return:
         image_board = cv2.imread(board_filepath)
         image_board_gray=cv2.cvtColor(image_board,cv2.COLOR_BGR2GRAY)
         image_board_inrange=cv2.inRange(image_board_gray,100,230)
-        #cv2.imshow("board",image_board_inrange)
+        cv2.imshow("board",image_board_inrange)
 
         cnts_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
         cnts_b = cnts_b[0]
         cnts_b1,heirarchy_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
         l_board=[]
-
+        print heirarchy_b
         for j in range(0,len(heirarchy_b[0])):
             if heirarchy_b[0][j][3]==-1:
                 if heirarchy_b[0][j][2]!=-1:
@@ -140,7 +140,6 @@ Return:
                     area=0
                     px=[260,260,260]
                 l_board.append([cY1,cX1,heirarchy_b[0][j][2],detect_color(px),shape,area,cX1*cY1])
-
 		cv2.imshow("window",image_board)
         cnts_c = cv2.findContours(image_contain_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
         cnts_c = cnts_c[0]
@@ -157,6 +156,8 @@ Return:
                     shape = find_shape(cnts_c[heirarchy_c[0][j][2]])
                     c = cnts_c[heirarchy_c[0][j][2]]
                     M = cv2.moments(c)
+                    print M
+                    exit()
                     cX = int((M['m10'] / M['m00']))
                     cY = int((M['m01'] / M['m00']))
                     area=M['m00']
@@ -207,7 +208,7 @@ Below part of program will run when ever this file (task1_main.py) is run direct
 if __name__ == '__main__':
 
 
-	board_filepath = "1.jpg"    			# change filename of board provided to you
+	board_filepath = "container_1.jpg"    			# change filename of board provided to you
 	container_filepath = "test_images/container_1.jpg"		# change filename of container as required for testing
 
 	main(board_filepath,container_filepath)

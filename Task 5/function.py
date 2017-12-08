@@ -1,44 +1,49 @@
-def grid_to_map(l,length,breadth):
-    #l-->[0,0](example)
-    X=length/2+l[0]*length
-    Y=breadth/2+l[1]*breadth
-    return X,Y
-
-def color(px):
-    # px is  a list, where px[0]=B, px[1]=G, px[2]=R
-    b=px[0]
-    g=px[1]
-    r=px[2]
-    if b>=130 and b<=170:
-        if g>=90 and g<=140:
-            if r>=175 and r<=200:
-                return 'pink'
-    if b>=0 and b<=120:
-        if g>=210 and g<=255:
-            if r>=210 and r<=255:
-                return 'yellow'
-    
-def direction(l1,l2):
-    #l1-->co-ord of yellow marker
-    #l2-->co-ord of pink marker
-    #l1[0]->x co-ord, l1[1]->y co-ord
-    #    N
-    #W __|__ E
-    #    |
-    #    S
-    if abs(l1[0]-l2[0])<=10:
-        if (l2[1]-l1[1])>=0:
-            return 'north'
-        else:
-            return 'south'
-    elif abs(l1[1]-l2[1])<=10:
-        if l1[0]>l2[0]:
-            return 'east'
-        else:
-            return 'west'
+import cv2
+from math import pi,atan2,degrees
+from navigation import *
+import time
+def find_shape(c):
+    shape = "unidentified"
+    peri = cv2.arcLength(c, True)
+    approx = cv2.approxPolyDP(c, 0.049* peri, True)
+    if len(approx) == 3 :
+        shape = "Triangle"
+    elif len(approx) ==4 :
+        shape = "4-sided"
     else:
-    	return 'undefined'
-            
-    
-    
-     
+        shape = "Circle"
+    return shape
+
+def detect_color(px):
+        if px[0]>240 and px[1]<10 and px[2]<10:
+                return "blue"
+        elif px[0]<10 and px[1]<10 and px[2]>240:
+                return "red"
+        elif px[0]<10 and px[1]>240 and px[2]<10:
+                return "green"
+        elif px[0]<10 and px[1]>240 and px[2]>240:
+                return "yellow"
+def orient(l2,l1):
+    cX2=float(l2[0])
+    cY2=float(l2[1])
+
+    cX=float(l1[0])
+    cY=float(l1[1])
+    if not cX2==cX:
+
+        angle=degrees(atan2((cY2-cY),(cX2-cX)))
+    else:
+        if cY2>=cY:
+            angle=90
+        else:
+            angle=-90
+    return angle
+
+def rotate_left():
+    sendByte('a')
+def rotate_right():
+    sendByte('d')
+def stop():
+    sendByte('s')
+def forward():
+    sendByte('w')

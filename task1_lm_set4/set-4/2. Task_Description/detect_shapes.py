@@ -38,12 +38,12 @@ def Sort(l):
 image_contain = cv2.imread("container_5.jpg")
 image_contain_gray=cv2.cvtColor(image_contain,cv2.COLOR_BGR2GRAY)
 image_contain_inrange=cv2.inRange(image_contain_gray,100,230)
-#cv2.imshow("container",image_contain_inrange)
+cv2.imshow("container",image_contain_inrange)
 
 image_board = cv2.imread("board_4.jpg")
 image_board_gray=cv2.cvtColor(image_board,cv2.COLOR_BGR2GRAY)
 image_board_inrange=cv2.inRange(image_board_gray,100,230)
-#cv2.imshow("board",image_board_inrange)
+cv2.imshow("board",image_board_inrange)
 
 cnts_b = cv2.findContours(image_board_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
 cnts_b = cnts_b[0]
@@ -72,7 +72,7 @@ for j in range(0,len(heirarchy_b[0])):
             area=0
             px=[260,260,260]
         l_board.append([cY1,cX1,heirarchy_b[0][j][2],detect_color(px),shape,area,cX1*cY1])       
-        cv2.putText(image_board, detect_color(px), (cX, cY), cv2.FONT_ITALIC,0.5, (255, 255, 255), 2)
+        cv2.putText(image_board, detect_color(px), (cX, cY), cv2.FONT_ITALIC,0.5, (0, 0, 0), 2)
 
 cnts_c = cv2.findContours(image_contain_inrange.copy(),cv2.RETR_TREE ,cv2.CHAIN_APPROX_SIMPLE)
 cnts_c = cnts_c[0]
